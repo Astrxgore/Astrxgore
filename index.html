@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Энергосеть</title>
+  <link rel="stylesheet" href="styles.css?v=2">
+  <!-- Подключение библиотеки SheetJS через CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+  <h2>Размещение городов и ЛЭП</h2>
+  <canvas id="gridCanvas" width="600" height="480"></canvas>
+  <!-- Контекстное меню для выбора оборудования -->
+  <div id="menu" class="hidden">
+    <p>Выберите оборудование:</p>
+    <button onclick="setEquipment('Реклоузер')">Реклоузер</button>
+    <button onclick="setEquipment('Выключатель')">Выключатель</button>
+    <button onclick="setEquipment('Разъединитель')">Разъединитель</button>
+  </div>
+  <!-- Таблицы объектов -->
+  <div id="tables">
+    <table id="outageHoursTable" border="1">
+      <thead>
+        <tr>
+          <th>Линия</th>
+          <!-- Столбцы для городов 2..15 -->
+          <th>Город 2</th>
+          <th>Город 3</th>
+          <th>Город 4</th>
+          <th>Город 5</th>
+          <th>Город 6</th>
+          <th>Город 7</th>
+          <th>Город 8</th>
+          <th>Город 9</th>
+          <th>Город 10</th>
+          <th>Город 11</th>
+          <th>Город 12</th>
+          <th>Город 13</th>
+          <th>Город 14</th>
+          <th>Город 15</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Здесь будут строки, генерируемые JS -->
+      </tbody>
+    </table>
+
+
+    <table id="citiesTable" border="1">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Координаты</th>
+          <th>Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Здесь будут добавляться строки городов -->
+      </tbody>
+    </table>
+    
+
+
+
+    <h3>ЛЭП</h3>
+    <table id="linesTable" border="1">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Города</th>
+          <th>Оборудование 1</th>
+          <th>Оборудование 2</th>
+          <th>Провод</th>
+          <th>Стоим. не по лесу</th>
+          <th>Стоим. по лесу</th>
+          <th>Стоим. оборудования</th>
+          <th>Сумма стоимостей</th>
+          <th>Частота отключений (год)</th>
+          <th>Действие</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- Dropdown для выбора типа провода -->
+  <div class="dropdown" id="cableDropdown" style="display:none; position:absolute;">
+    <div class="dropdown-button" id="dropdownCableButton">Выберите провод</div>
+    <div class="menu" id="cableOptionsMenu">
+      <!-- Пункты будут добавляться динамически -->
+    </div>
+  </div>
+
+  <!-- Легенда -->
+  <div id="legend">
+    <p>Легенда: 
+      <span class="legend-item" style="background:blue;"></span> - Реклоузер, 
+      <span class="legend-item triangle"></span> - Выключатель, 
+      <span class="legend-item" style="color:orange;">★</span> - Разъединитель
+    </p>
+  </div>
+
+  <!-- Блок управления: импорт/экспорт, итоговая стоимость и заметки -->
+  <div id="controls">
+    <button onclick="exportLayout()">Экспорт расположения (JSON)</button>
+    <!-- Новая кнопка для экспорта в Excel -->
+    <button onclick="exportToExcel()">Экспорт в Excel</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importLayout(event)">
+    <button onclick="document.getElementById('importFile').click()">Импорт расположения</button>
+    <br><br>
+    <label for="finalCost">Итоговая стоимость:</label>
+    <input type="number" id="finalCost" placeholder="Введите итоговую стоимость">
+    <br><br>
+    <textarea id="notes" rows="3" cols="50" placeholder="Введите заметки..."></textarea>
+  </div>
+
+  <!-- Подключаем файлы значений и основного скрипта -->
+  <script src="values.js?v=2"></script>
+  <script src="script.js?v=2"></script>
+</body>
+</html>
